@@ -1,5 +1,7 @@
 import base64
 import json
+import wave
+
 from flask import Flask, request, jsonify
 from vosk import Model, KaldiRecognizer
 import io
