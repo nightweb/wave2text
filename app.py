@@ -2,18 +2,13 @@ import base64
 import json
 from flask import Flask, request, jsonify
 from vosk import Model, KaldiRecognizer
-import wave
 import io
+from pydub import AudioSegment
 
 app = Flask(__name__)
 
 # Загрузка модели Vosk
 model = Model("/app/model")
-
-
-@app.route('/')
-def hello_world():  # put application's code here
-    return 'ready'
 
 @app.route('/parse', methods=['POST'])
 def parse():
@@ -27,12 +22,19 @@ def parse():
         audio_data = base64.b64decode(data['wave'])
         audio_stream = io.BytesIO(audio_data)
 
-        # Чтение аудиофайла
-        wf = wave.open(audio_stream, "rb")
-        if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getcomptype() != "NONE":
-            return jsonify({'error': 'Unsupported wave file'}), 400
+        # Использование pydub для изменения частоты дискретизации
+        audio = AudioSegment.from_file(audio_stream)
+        audio = audio.set_frame_rate(16000)
 
+        # Преобразование обратно в байты
+        audio_stream = io.BytesIO()
+        audio.export(audio_stream, format="wav")
+        audio_stream.seek(0)
+
+        # Использование Vosk для распознавания
+        wf = wave.open(audio_stream, "rb")
         rec = KaldiRecognizer(model, wf.getframerate())
+
         while True:
             data = wf.readframes(4000)
             if len(data) == 0:

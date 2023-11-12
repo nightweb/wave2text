@@ -1,2 +1,4 @@
 flask
 vosk
+gunicorn
+pydub

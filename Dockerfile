@@ -4,6 +4,9 @@ FROM python:3.9-slim
 # Установка рабочей директории в контейнере
 WORKDIR /app
 
+# Установка ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg
+
 # Копирование файла зависимостей и установка зависимостей
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
