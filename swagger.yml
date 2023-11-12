@@ -1,0 +1,35 @@
+openapi: 3.0.0
+info:
+  version: '1'
+  title: Wave2Text api
+  description: Wave2Text api
+paths:
+  /:
+    get:
+      description: Returns status reasy
+      responses:
+        '200':
+          description: Successful response
+  /parse:
+      post:
+        description: Parse wave file to text
+        requestBody:
+          content:
+            application/json:
+              schema:      # Request body contents
+                type: object
+                properties:
+                  wave:
+                    type: string
+                example:   # Sample object
+                  wave: "base64data"
+        responses:
+          '200':
+            description: Successful response
+servers:
+  # Added by API Auto Mocking Plugin
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/OLIGARH/wave2text/1
+  - description: Wave2Text api
+    url: https://you.url
