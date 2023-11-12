@@ -8,11 +8,14 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Установка Gunicorn
+RUN pip install gunicorn
+
 # Копирование содержимого локальной папки в контейнер
 COPY . .
 
 # Открытие порта 5000 для доступа к серверу
 EXPOSE 5000
 
-# Запуск приложения
-CMD ["python", "./app.py"]
+# Запуск приложения с помощью Gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
